@@ -1,0 +1,4 @@
+to run virtual env:
+1. go to >> /home/ubuntu/environment/myprojects/venv/bin
+2. run > source activate
+3. run > flask run
