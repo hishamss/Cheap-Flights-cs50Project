@@ -1,0 +1,269 @@
+{% extends "layout.html" %}
+{% block main %}
+<div id="intro" class="view" style="height:940px;">
+    <div class="full-bg-img">
+        <div id="div_form" class="container" style="margin-top:300px; width:800px;">
+            <div class="card special-card">
+                <div class="card-body">
+                    <form id="form" action="/search" method="get">
+                        <div class="row form-group">
+                            <div class=col>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="Roundtrip" onclick="roundtrip()">
+                                    <label class="custom-control-label text-white" for="Roundtrip">Roundtrip</label>
+                                </div>
+                            </div>
+                            <div class=col>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="nonstop" name="nonstop" onclick="check()">
+                                    <label class="custom-control-label text-white" for="nonstop">Nonstop</label>
+                                </div>
+                            </div>
+                            <div class=col>
+                                <select id="class" name="class" class="rounded border border-primary" style="height:38px; width:182px;">
+                                    <option disabled selected value="">Class</option>
+                                    <option> Economy </option>
+                                    <option> Premium Economy </option>
+                                    <option> Business </option>
+                                    <option> First Class </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class=col>
+                                <!-- Button trigger modal for FROM input --> 
+                                <input type="text" name="from" autocomplete="off" id="from" placeholder="From" data-toggle="modal" data-target="#ModalLong1" class="rounded border border-primary" style="height:38px; width:182px"></input>
+                            <!-- Modal -->
+                                <div class="modal fade" id="ModalLong1" tabindex="-1" role="dialog" aria-labelledby="ModalLong1" aria-hidden="true">
+                                    <div class="modal-dialog" role="document" style="margin-right:900px;">
+                                        <div class="modal-content" style="margin-top:380px;">
+                                            <div class="container">
+                                                <div class="modal-body">
+                                                    <div>
+                                                        <input autocomplete="off" id="modal1" autofocus placeholder="From" type="text" class="rounded border border-primary" style="height:50px; width:400px; margin-left:15px; margin-top:12px;">
+                                                    </div>
+                                                    <div>
+                                                        <ul id ="check1"></ul>
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of Trigger button for modal1-->
+                            <div class=col>
+                                <!-- Button trigger modal for TO input -->
+                                <input type="text" name="to" autocomplete="off" id="to" placeholder="To" data-toggle="modal" data-target="#ModalLong2" class="rounded border border-primary" style="height:38px; width:195px;"></input>
+                                <!-- Modal2 -->
+                                <div class="modal fade" id="ModalLong2" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle2" aria-hidden="true">
+                                    <div class="modal-dialog" role="document" style="margin-right:700px;">
+                                        <div class="modal-content" style="margin-top:380px;">
+                                            <div class="container">
+                                                <div class="modal-body">
+                                                    <div>
+                                                        <input autocomplete="off" id="modal2" autofocus placeholder="To" type="text" class="rounded border border-primary" style="height:50px; width:400px; margin-left:15px; margin-top:12px;">
+                                                    </div>
+                                                    <div>
+                                                        <ul id ="check2"></ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>    
+                            </div>
+                            <!-- End of Trigger button for modal2-->
+                            <div class=col>
+                                <input autocomplete="off" name="daterangepicker" type="text" id="daterangepicker" placeholder="Dates" class="rounded border border-primary" style="height:38px; width:182px;">    
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class=col>
+                                <input autocomplete="off" id="adults" name="adults" placeholder="Adults" type="text" class="rounded border border-primary" style="height:38px; width:182px;">    
+                            </div>
+                            <div class=col>
+                                <input autocomplete="off" name="children" placeholder="Children" type="text" class="rounded border border-primary" style="height:38px; width:195px;">    
+                            </div>
+                            <div class=col>
+                                <input autocomplete="off" name="infants" placeholder="Infants" type="text" class="rounded border border-primary" style="height:38px; width:182px;">    
+                            </div>
+                        </div>
+                        <button id="submitbtn" type="submit" class="btn btn-primary btn-lg rounded" onclick="is_clicked()">Search</button>
+                    </form>
+                    <div>
+                        <p id="alert" style="color:red;"></p>
+                    </div>
+                </div>
+            </div>    
+        </div>    
+    </div>
+</div>
+<div id="spinner" class="text-center" style="margin-top:150px;">
+    <div class="spinner-border m-5" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+// On load: hide spinner and set dates to daterange
+   window.onload = function() {
+  document.getElementById('spinner').style.display = 'none';
+  var date = new Date();
+        date.setDate(date.getDate());
+      $('#daterangepicker').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minDate: date,
+        opens: 'right',
+        drops: 'down'
+    }); 
+};
+/* Note: When you have the modal open and you click on the one of the airport, the page will submit the form (id didn't find logical answer for this). That's why I 
+created the function below to make sure to only submit the form when the submit button is clicked and all the required feild filled out.
+/* this function to check if the submit button has been clicked */
+var clicked;
+function is_clicked()
+{
+    clicked = true;
+}
+
+document.getElementById('form').onsubmit = function() {
+    let from = document.getElementById('from').value;
+    let to = document.getElementById('to').value;
+    let adults = document.getElementById('adults').value;
+    let flight_class = document.getElementById('class').value;
+    let nonstop = document.getElementById('nonstop').value;
+    /* check if the submit button clicked and one of the required feilds is emtpy */
+    if ((from == '' || to == '' || adults == '' || flight_class == '') && clicked) {
+        document.getElementById('alert').innerHTML = "Please Fill All Required Field(Class, From, To, Dates, Adults)";
+        clicked = false;
+    }
+    /* check if all the reqired feilds are filled and submit button has been clicked */
+    else if (from != '' && to != '' && adults != '' && flight_class != '' && clicked)
+    {
+    
+    //on submit: display spinner and hide form till the page load 
+    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('alert').style.display = 'none';
+    document.getElementById('intro').style.display = 'none';
+    return true;
+    }
+    return false;
+};
+    
+
+
+// when oneway switch is off : display date range
+// when oneway switch is on : display singale date
+
+function roundtrip() {
+    
+    if(document.getElementById("Roundtrip").checked) {
+        var date = new Date();
+        date.setDate(date.getDate());
+        $('#daterangepicker').daterangepicker({
+        autoApply: true,
+        minDate: date
+    });
+        
+      
+ }
+ 
+ else {
+     
+     var date = new Date();
+        date.setDate(date.getDate());
+      $('#daterangepicker').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minDate: date,
+        opens: 'right',
+        drops: 'down'
+    }); 
+ }
+    
+}
+
+function check(){
+    if(document.getElementById("nonstop").checked){
+    document.getElementById("nonstop").value = "True";
+    }
+    else {
+        document.getElementById("nonstop").value = "False";;
+    }
+}
+ 
+
+
+        
+  
+
+let input1 = document.getElementById('modal1');
+    input1.onkeyup = function() {
+        if (input1.value.length == 0){document.getElementById('check1').innerHTML = '';}
+        else{
+        $.get('/auto_list?from=' + input1.value, function(data) {
+            
+            let html = '';
+           if(data.length != 0){
+               for (var i = 0; i< data.length; ++i){
+                    html += '<li><button class="btn btn-link" onclick="copyfun1(this.id)" id="' + 'mod1' + i + '">' + data[i].Airport + ' -' + data[i].Code + '</button></li>';
+                }
+           }
+                else{
+                    html = '';
+                }
+            document.getElementById('check1').innerHTML = html;
+        });
+        }
+    };
+    /* this script to copy the value of the clicked airport then close the modal past the clicked airport in from input */
+    function copyfun1(clicked_id){
+        let li = document.getElementById(clicked_id);
+        let str = li.innerHTML;
+        str = str.substr(str.length - 3);
+        $('#ModalLong1').modal("hide");
+        document.getElementById('from').value = str;
+    }
+     
+/* script to display airports on TO Modal */     
+    let input2 = document.getElementById('modal2');
+    input2.onkeyup = function() {
+        if (input2.value.length == 0){document.getElementById('check2').innerHTML = '';}
+        else{
+        $.get('/auto_list?from=' + input2.value, function(data) {
+            
+            let html = '';
+           if(data.length != 0){
+               for (var i = 0; i< data.length; ++i){
+                    html += '<li><button class="btn btn-link" onclick="copyfun2(this.id)" id="' + 'mod2' + i + '">' + data[i].Airport + ' -' + data[i].Code + '</button></li>';
+                }
+           }
+                else{
+                    html = '';
+                }
+            document.getElementById('check2').innerHTML = html;
+        });
+        }
+    };
+    /* this script to copy the value of the clicked airport then close the modal past the clicked airport in from input */
+    function copyfun2(clicked_id){
+        let li = document.getElementById(clicked_id);
+        let str = li.innerHTML;
+        str = str.substr(str.length - 3);
+        $('#ModalLong2').modal("hide");
+        document.getElementById('to').value = str;
+    }
+    
+    /* this to foucus on the text(from) after openinng the modal1 */
+    $('#ModalLong2').on('shown.bs.modal', function () {
+    $('#modal2').focus();
+});
+/* this to foucus on the text(to) after openinng the first modal2 */
+$('#ModalLong1').on('shown.bs.modal', function () {
+    $('#modal1').focus();
+});
+    </script>
+{% endblock %}    
