@@ -1,0 +1,21 @@
+
+#intro {
+background: url("/static/css/logo1.jpg") no-repeat center fixed;
+-webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  height:100%;
+}
+
+.modal-backdrop {background: none;}
+
+.special-card {
+ background: rgb(0, 0, 0); /* Fallback color */
+  background: rgba(0, 0, 0, 0.5); /* Black background with 0.5 opacity */
+}
+
+.navbar-brand
+{
+  font-size: 30px;
+}
+
