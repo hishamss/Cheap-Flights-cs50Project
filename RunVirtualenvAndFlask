@@ -1,4 +1,3 @@
-to run virtual env:
-1. go to >> /home/ubuntu/environment/myprojects/venv/bin
-2. run > source activate
-3. run > flask run
+bash script to run Flask on startup:
+- Run-Flask bash script located: /home/ubuntu/pybox/Cheap_Flights
+- crontab -e>> this command to add the full path of the script.
