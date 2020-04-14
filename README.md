@@ -1,8 +1,6 @@
 # Cheap-Flights-cs50Project
-
 Cheap-Flights/cs50Project
-amazon cloud9 link: http://52.14.211.167:5000/
-
+https://tinyurl.com/vfscqzs
 1. python as back end language.
 2. website sends API call to Amadeus searching for cheap flights
    ![step2](/static/css/step2.jpg)
